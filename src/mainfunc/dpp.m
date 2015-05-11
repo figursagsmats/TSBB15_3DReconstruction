@@ -5,8 +5,8 @@ function r = dpp(vars, N_VIEWS, Xt)
     % 3D positions
     Np = size(Xt,2);
     X = reshape(vars(((1+N_VIEWS)*12):end),[3 Np]);
-    r = 0; 
-
+     
+    r = 0;
     for m = 1:N_VIEWS
        Rt = reshape(vars(1+((m-1)*12):12+((m-1)*12)),[3 4]);
        Xtk = Xt(:,:,m);
