@@ -9,7 +9,7 @@ function [F] = estimate_fundamental_matrix_ransac(corrPts1, corrPts2, nIteration
 %        
 
 fprintf('---RANSAC---');
-max_nr_of_inliers = 0;
+nMaxIterations = 0;
 
 for m = 1:nIterations
     
@@ -24,11 +24,11 @@ for m = 1:nIterations
     
     % Nr of inliers
     inliers_bin = (dist(1,:) < distThresh) & (dist(1,:) < distThresh);
-    nr_of_inliers = sum(inliers_bin);
+    nInliers = sum(inliers_bin);
     
-    if(max_nr_of_inliers < nr_of_inliers)
+    if(nMaxIterations < nInliers)
         best_iteration = m;
-        max_nr_of_inliers = nr_of_inliers;
+        nMaxIterations = nInliers;
         ransacBestF = F;
 %         inlier_indexes = find(inliers_bin);
 %         outlier_indexes = find(~inliers_bin);
@@ -36,10 +36,8 @@ for m = 1:nIterations
     
 end
 fprintf('DONE\n');
-fprintf('RANSAC best iteration %d ...Inliers: %d \n',best_iteration,max_nr_of_inliers);
-
+fprintf('RANSAC best iteration %d ...Inliers: %d \n', best_iteration, nMaxIterations);
 
 F = ransacBestF;
-
 
 end

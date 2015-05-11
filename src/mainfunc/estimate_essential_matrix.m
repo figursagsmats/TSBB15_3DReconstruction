@@ -5,8 +5,8 @@ function [E] = estimate_essential_matrix(corrPts1, corrPts2, K, F)
 % constraint x1'*E*x2 = 0
 % 
 % calculate_essential_matrix(corrpts1, corrpts2, K, F)
-% Input: corrPts1 = 3xN => [x1 y1 1]'
-%        corrPts2 = 3xN => [x2 y2 1]'
+% Input: corrPts1 = 2xN
+%        corrPts2 = 2xN
 %        Internal camera matrix K1 and K2
 %        F - fundamental matrix
 
@@ -23,17 +23,20 @@ D = [1 0 0;
      0 1 0;
      0 0 0;];
  
-E = U*D*V';    
+E = U*D*V';
 
-epConstraint = corrPts1(:,i)'*E*corrPts2(:,i);
+homoCorrPts1 = conv_to_homogenous(corrPts1);
+homoCorrPts2 = conv_to_homogenous(corrPts2);
 
-zeroConstraint = 0;
+firstEpConstraint = homoCorrPts1(:,1)'*E*homoCorrPts2(:,1);
+
+sumEpConstraint = 0;
 for i = 1:length(corrPts)
-    zeroConstraint = zeroConstraint + corrPts1(:,i)'*E*corrPts2(:,i);
+    sumEpConstraint = sumEpConstraint + homoCorrPts1(:,i)'*E*homoCorrPts2(:,i);
 end
 
-fprintf('>>Epipolar constraint for first point<< %f', epConstraint );
-fprintf('>>>>>Sum of epipolar constraints<<<<< %f', zeroConstraint);
+fprintf('>>Epipolar constraint for first point<< %f', firstEpConstraint);
+fprintf('>>>>>Sum of epipolar constraints<<<<< %f', sumEpConstraint);
 
 
 end
