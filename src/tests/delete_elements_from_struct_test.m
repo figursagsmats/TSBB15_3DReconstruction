@@ -17,5 +17,5 @@ newLength = length(myStruct)
 diff = orgLength - newLength;
 assert(diff == length(elementsToDelete));
 
-% CorrectsElementsRemoved
+%% CorrectsElementsRemoved
 assert(myStruct(1).img == 3);
