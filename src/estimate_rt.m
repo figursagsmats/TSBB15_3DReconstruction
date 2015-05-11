@@ -17,11 +17,9 @@ W = [0 1 0;
      0 0 1];
 
 [U, ~, V] = svd(E);
-tPositiveDir = V(:,3);
-tNegativeDir = -V(:,3);
+t(:,1) = V(:,3);
+t(:,2) = -V(:,3);
 
-t(:,1) = tPositiveDir;
-t(:,2) = tNegativeDir;
 
 R(:,:,1) = V*W*U';
 R(:,:,2) = V*W'*U';
