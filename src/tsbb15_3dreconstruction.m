@@ -1,9 +1,12 @@
 close all;clear all;clc
 %Add directoried to path
-if ~exist('getCameraman.m','file') %simply check if a certain functions exists...
+if (~exist('getCameraman.m','file') || ~exist('pnp.m','file')) %simply check if a certain functions exists...
     fprintf('Adding external dependencies to path... \n')
     addpath(genpath('external')) %external functions
-    addpath(genpath('../datasets/dino')) %datasets
+    addpath(genpath('helpers')) %helpers functions
+    addpath(genpath('loaders')) %loader functions
+    addpath(genpath('tests')) %loader functions
+    addpath(genpath('mainfunc')) %loader functions
 end
 % RUN TESTS
 %testResults = table(runtests())
