@@ -12,7 +12,7 @@ end
 images = load_dataset('../datasets/dino/images/','*.ppm');
 K = calibrate_camera('../datasets/dino/calibration','*.ppm');
 
-%CREATE POINTS TABLE
+% CREATE POINTS TABLE
 % for i = 1:length(images)
 %     feature_pts = find_feature_pts(images(i));
 %     pointsTable = match(feature_pts);
