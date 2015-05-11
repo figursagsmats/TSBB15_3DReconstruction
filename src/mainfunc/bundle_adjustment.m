@@ -31,53 +31,46 @@
 function [Q, P, BK] = bundle_adjustment(Q, P, BK, pointsTable)
 
     % Instantiate variables
-    const N_VIEWS = size(Q,3); %Amount of views
-    const N_POINTS = size(P,3); %Amount of points
+    N_VIEWS = size(Q,3); %Amount of views
+    % N_POINTS = size(P,3); %Amount of points
     X = P; %Saving the 3D-points to variable X (4xN)
     Rt_min = zeros(size(Q));
-    X_min = zeros(size(X));
+    P_min = zeros(size(X));
     
     % The jacobian
     % Following the steps from Mathworks; Jacobian with LSQNONLIN:
     % http://se.mathworks.com/help/optim/ug/nonlinear-least-squares-with-full-jacobian.html?refresh=true
-    
-    % The minimization loop
-    for k = 1:N_VIEWS
-        
-        % Visibility matrix in view k
-        Wk = is_visibility(pointsTable(:,:,k)); 
-        
-        % Feature detected 2D-points on view k
-        Xk = pointsTable(:,:,k); 
-        
-        % The Rt in view k
-        Qk = Q(:,:,k); 
-        
-        % Put views and 3D-points in a 1D-vector for lsqnonlin
-        vars = [Qk(:);  
-                 X(:)];
-        
-        % Create the anonymous function dpp for lsqnonlin
-        % The function will return the euclidian distance
-        get_r = @(x)dpp(vars, Xk);
-        
-        % The initial guess
-        start_guess = vars;
-        
-        % Minimize the error with lsqnonlin
-        [output, ~] = lsqnonlin(get_r, start_guess);
-        
-        % Extract the minimized C-matrix from output
-        Rt_min(:,:,k) = reshape(output(1:12), [3 4]);
 
-        % Extract the minimized 3D-points from output
-        count = 1;
-        for m=13:3:length(output)
-            X_min(:,:,count) = output(m:(m+2));
-            count = count + 1;
-        end
-        
+    % Put views and 3D-points in a 1D-vector for lsqnonlin
+    vars = [ Q(:);  
+             X(:) ];
+
+    % Create the anonymous function dpp for lsqnonlin
+    % The function will return the euclidian distance
+    get_r = @(x)dpp(vars, N_VIEWS, pointsTable);
+
+    % The initial guess
+    start_guess = vars;
+
+    % Minimize the error with lsqnonlin
+    [output, ~] = lsqnonlin(get_r, start_guess);
+    
+    % Extract the minimized Rt-matrix from output
+    for m = 1:N_VIEWS
+       Rt_min(:,:,m) = reshape(output(1+((m-1)*12):12+((m-1)*12)),[3 4]);
     end
+
+    % Extract the minimized 3D-points from output
+    count = 1;
+    for m = (1 + 12*N_VIEWS):3:length(output)
+        P_min(:,:,count) = output(m:(m+2));
+        count = count + 1;
+    end
+    
+    % Apply the new minimized 3D-points and Rt-matrices
+    P = P_min;
+    Q = Rt_min;
+
 end
 
 

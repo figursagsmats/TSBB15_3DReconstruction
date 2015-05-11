@@ -1,5 +1,5 @@
 % The visibility function
-% Input: PointTable, k, j
+% Input: PointTable
 % Output: 1 if visible, 0 if not visible
 
 function [W] = is_visibility(PointTable)
