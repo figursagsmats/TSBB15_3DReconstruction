@@ -29,7 +29,8 @@ console_heading('INIT');
 
 [pts1,pts2] = get_correspondces(1,2,pointsTable);
 
-E = estimate_essential_matrix(pts1,pts2,K);
+
+E = estimate_essential_matrix(pts1,pts2,K, F);
 
 Rt = estimate_rt(E, pts1(:,1),pts2(:,1));
 

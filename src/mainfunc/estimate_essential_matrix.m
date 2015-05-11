@@ -15,6 +15,9 @@ function [E] = estimate_essential_matrix(corrPts1, corrPts2, K, F)
 
 % From Algorithm 25, page 252 - IREG by Klas Nordberg
 % =========> Does normalization take place in F/K? <=========
+
+F = estimate_fund 
+
 E0 = K'*F*K;
 
 [U, ~, V] = svd(E0);
