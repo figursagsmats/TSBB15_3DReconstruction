@@ -5,7 +5,7 @@ if (~exist('getCameraman.m','file') || ~exist('pnp.m','file')) %simply check if 
     addpath(genpath('external')) %external functions
     addpath(genpath('helpers')) %helpers functions
     addpath(genpath('loaders')) %loader functions
-    addpath(genpath('tests')) %loader functions
+    %addpath(genpath('tests')) %loader functions
     addpath(genpath('mainfunc')) %loader functions
 end
 % RUN TESTS
@@ -21,7 +21,7 @@ K = calibrate_camera('../datasets/dino/calibration','*.ppm');
 %     pointsTable = match(feature_pts);
 % end
 
-pointsTable = load_dino_2dpts_gt(); %FORNOW
+[pointsTable,Ps] = load_dino_gt(); %FORNOW
 
 % INITIATION PART
 console_heading('INIT');
