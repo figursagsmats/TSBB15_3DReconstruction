@@ -40,7 +40,8 @@ function [Q, P, BK] = bundle_adjustment(Q, P, BK, pointsTable)
     % The jacobian
     % Following the steps from Mathworks; Jacobian with LSQNONLIN:
     % http://se.mathworks.com/help/optim/ug/nonlinear-least-squares-with-full-jacobian.html?refresh=true
-
+    opts = optimoptions(@lsqnonlin,'Jacobian','on');
+    
     % Put views and 3D-points in a 1D-vector for lsqnonlin
     vars = [ Q(:);  
              X(:) ];
@@ -53,7 +54,7 @@ function [Q, P, BK] = bundle_adjustment(Q, P, BK, pointsTable)
     start_guess = vars;
 
     % Minimize the error with lsqnonlin
-    [output, ~] = lsqnonlin(get_r, start_guess);
+    [output, ~] = lsqnonlin(get_r, start_guess, [], [], opts);
     
     % Extract the minimized Rt-matrix from output
     for m = 1:N_VIEWS
