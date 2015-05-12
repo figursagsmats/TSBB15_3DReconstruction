@@ -16,7 +16,7 @@ function [ K ] = calibrate_camera( dir,fileExtenstion )
 
 %FOR NOW: fetch from ground truth
 
-Ps = load_dino_cmats_gt();
+[pointsTable Ps] = load_dino_gt();
 P = cell2mat(Ps(1)); %just takes first C matrix since all have same K
 [K, r, c] = DecomposeCameraMatrix(P);
 
