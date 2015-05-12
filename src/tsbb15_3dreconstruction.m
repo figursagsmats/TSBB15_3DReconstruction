@@ -2,32 +2,33 @@ close all;clear all;clc
 %Add directoried to path
 if (~exist('getCameraman.m','file') || ~exist('pnp.m','file')) %simply check if a certain functions exists...
     fprintf('Adding external dependencies to path... \n')
-    addpath(genpath('external')) %external functions
-    addpath(genpath('helpers')) %helpers functions
-    addpath(genpath('loaders')) %loader functions
-    addpath(genpath('tests')) %loader functions
-    addpath(genpath('mainfunc')) %loader functions
+    addpath(genpath('../')) %external functions
 end
 % RUN TESTS
 %testResults = table(runtests())
 
 % GET DATASET AND CALIBRATE
+global images; 
 images = load_dataset('../datasets/dino/images/','*.ppm');
 K = calibrate_camera('../datasets/dino/calibration','*.ppm');
 
-%CREATE POINTS TABLE
-% for i = 1:length(images)
-%     feature_pts = find_feature_pts(images(i));
-%     pointsTable = match(feature_pts);
+%% CREATE POINTS TABLE
+
+% feature_pts = find_feature_pts(images(1).img);
+% pointsTable = match_and_add(feature_pts);
+% for i = 2:length(images)
+%     feature_pts = find_feature_pts(images(i).img);
+%     pointsTable = match_and_add(feature_pts,pointsTable,images);
 % end
 
-pointsTable = load_dino_2dpts_gt(); %FORNOW
+[pointsTable,Ps] = load_dino_gt(); %FORNOW
 
-% INITIATION PART
+%% INITIATION PART
 console_heading('INIT');
-[pointsTable, viewImageMapping, nViews] = rearrange_views(pointsTable);
+%[pointsTable, viewImageMapping, nViews] = rearrange_views(pointsTable);
 
 [pts1,pts2] = get_correspondces(1,2,pointsTable);
+
 
 E = estimate_essential_matrix(pts1,pts2,K);
 
