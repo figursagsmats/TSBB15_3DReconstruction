@@ -9,6 +9,8 @@ corrList = zeros(size(pts1));
 corrList(1,:) = 1:length(pts1);
 corrList(2,:) = 1:length(pts1);
 
+% Give the perfect input some hardcoded outliers. These are very well
+% placed and suitable outliers.
 % pts1(:,1) = [430 280];
 % pts1(:,20) = [435 145];
 % pts1(:,25) = [405 440];
