@@ -1,6 +1,7 @@
 function [goldStandardF] = estimate_fundamental_matrix_gs(corrPts1, corrPts2, bestF)
-nCorrs = length(corrPts1);
 
+
+nCorrs = length(corrPts1);
 % Get camaera matricies - C2 = [I | O](?)
 [C1,C2] = fmatrix_cameras(bestF);
 
@@ -35,4 +36,5 @@ C_min = output(1:12);
 C_min = reshape(C_min, [3 4]);
 
 % Get fundamental matrix from best C
-F = fmatrix_from_cameras(C_min, C2);
+goldStandardF = fmatrix_from_cameras(C_min, C2);
+end
