@@ -32,9 +32,9 @@ D = [1 0 0;
  
 E = U*D*V';
 
-if is_homogenous(corrPts1) == false
-    corrPts1 = conv_to_homogenous(corrPts1);
-    corrPts2 = conv_to_homogenous(corrPts2);
+if is_homogeneous(corrPts1) == false
+    corrPts1 = conv_to_homogeneous(corrPts1);
+    corrPts2 = conv_to_homogeneous(corrPts2);
 end
 
 firstEpConstraint = corrPts1(:,1)'*E*corrPts2(:,1);
