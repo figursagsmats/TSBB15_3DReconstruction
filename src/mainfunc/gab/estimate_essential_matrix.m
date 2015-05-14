@@ -13,10 +13,6 @@ function [E] = estimate_essential_matrix(corrPts1, corrPts2, K, F)
 % From CVC - by Diego Cheda
 % E = EssentialMatrixFrom2DPoints(corrPts1, corrPts2, K1);
 
-% From Algorithm 25, page 252 - IREG by Klas Nordberg
-% =========> Does normalization take place in F/K? <=========
-
-
 if nargin < 4
     % TODO: Check if i have to save the inliers/outliers from RANSAC
     F = estimate_fundamental_matrix(corrPts1, corrPts2);
