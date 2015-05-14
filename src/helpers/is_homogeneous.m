@@ -1,12 +1,12 @@
-function [isHomogenous] = is_homogenous( points )
+function [isHomogeneous] = is_homogeneous(points)
 %IS_HOMOGENOUS Check if given 2xN/3xN/4xN/... points are in homogenous coordinates.
 
-nHomogenous = sum(1 == points(end,:));
+nHomogeneous = sum(1 == points(end,:));
 
-if nHomogenous == length(points)
-    isHomogenous = 1;
+if nHomogeneous == size(points, 2)
+    isHomogeneous = 1;
 else
-    isHomogenous = 0;
+    isHomogeneous = 0;
 end
 
 end

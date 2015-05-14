@@ -32,9 +32,9 @@ end
 epipolarMean = mean(epipolarConstraint);
 epipolarMedian = median(epipolarConstraint);
 
-assert(totalIntConstraint < 0.1, 'The internal constraint for E is not happy (satisfied)');
-assert(internalConstraintMean < 0.1, 'The mean of the internal constraint for E is not happy (satisfied)');
-assert(internalConstraintMedian < 0.1, 'The median of the internal constraint for E is not happy (satisfied)');
+assert(totalIntConstraint < 0.1, 'The internal constraint for E is not satisfied');
+assert(internalConstraintMean < 0.1, 'The mean of the internal constraint for E is not satisfied');
+assert(internalConstraintMedian < 0.1, 'The median of the internal constraint for E is not satisfied');
 assert(epipolarMean < 1, 'The mean of epipolar constraint for E is not satisfied');
 assert(epipolarMedian < 1, 'The median of epipolar constraint for E is not satisfied');
 

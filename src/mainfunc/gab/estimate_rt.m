@@ -1,4 +1,4 @@
-function [ Rt ] = estimate_rt(E, corrPoint1, corrPoint2 )
+function [ Rt ] = estimate_rt(E, corrPts1, corrPts2)
 % CALCULATE_Rt - A camera pose Rt consistent with E
 % 
 % Calculate a relative camera pose Rt that is consistent
@@ -35,7 +35,7 @@ for tDirection = 1:2
         % Pick an Rt.
         Rt2 = [R(:,:,RDirection) t(:,tDirection)];
         % Get 3D-point for Rt1 and Rt2, where Rt1 is unit
-        X_homogenous = triangulate_optimal(Rt1, Rt2, corrPoint1, corrPoint2);
+        X_homogenous = triangulate_optimal(Rt1, Rt2, corrPts1, corrPts2);
         X = norml(X_homogenous);
         
         X2 = R(:,:,RDirection)*X + t(:,tDirection);
