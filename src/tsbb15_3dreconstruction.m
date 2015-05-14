@@ -21,8 +21,7 @@ K = calibrate_camera('../datasets/dino/calibration','*.ppm');
 %     pointsTable = match_and_add(feature_pts,pointsTable,images);
 % end
 
-[pointsTable,Ps] = load_dino_gt(); %FORNOW
-
+[pointsTable,Ps] = load_dino_gt(); %FORNOW 
 %% INITIATION PART
 console_heading('INIT');
 %[pointsTable, viewImageMapping, nViews] = rearrange_views(pointsTable);

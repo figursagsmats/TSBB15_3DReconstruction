@@ -39,13 +39,14 @@ end
 
 firstEpConstraint = corrPts1(:,1)'*E*corrPts2(:,1);
 
+nCorrs = length(corrPts1);
 sumEpConstraint = 0;
-for i = 1:length(corrPts)
+for i = 1:nCorrs
     sumEpConstraint = sumEpConstraint + corrPts1(:,i)'*E*corrPts2(:,i);
 end
 
-fprintf('>>Epipolar constraint for first point<< %f', firstEpConstraint);
-fprintf('>>>>>Sum of epipolar constraints<<<<< %f', sumEpConstraint);
+fprintf('>>Epipolar constraint - first point for E << \n %f', firstEpConstraint);
+fprintf('>>>>>Sum of all points for E <<<<< \n %f', sumEpConstraint);
 
 
 end

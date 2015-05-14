@@ -24,8 +24,8 @@ sumEpipolarRans = 0;
 % Epipolar constraint for the inliers
 for i = 1:length(pts1)
 %    if i ~= 1 && i ~= 20 && i ~= 25 && i ~= 30 && i ~= 35
-        a = conv_to_homogenous(pts1(:,i));
-        b = conv_to_homogenous(pts2(:,i));
+        a = conv_to_homogeneous(pts1(:,i));
+        b = conv_to_homogeneous(pts2(:,i));
         sumEpipolarRans = sumEpipolarRans + a'*F_ransac*b;
 %    end
 end
@@ -34,8 +34,8 @@ sumEpipolarRans
 F_gs = estimate_fundamental_matrix_gs(pts1,pts2,F_ransac);
 for i = 1:length(pts1)
 %    if i ~= 1 && i ~= 20 && i ~= 25 && i ~= 30 && i ~= 35
-        a = conv_to_homogenous(pts1(:,i));
-        b = conv_to_homogenous(pts2(:,i));
+        a = conv_to_homogeneous(pts1(:,i));
+        b = conv_to_homogeneous(pts2(:,i));
         sumEpipolarRans = sumEpipolarRans + a'*F_gs*b;
 %    end
 end
