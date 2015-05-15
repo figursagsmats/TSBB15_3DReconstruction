@@ -36,7 +36,9 @@ for m = 1:nIterations
     
 end
 fprintf('DONE\n');
+fprintf('Total number of correspondences: %d \n', nCorrs);
 fprintf('RANSAC best iteration %d ...Inliers: %d \n', best_iteration, nMaxIterations);
+
 
 F = ransacBestF;
 

@@ -13,10 +13,10 @@ function [E] = estimate_essential_matrix(corrPts1, corrPts2, K, F)
 % From CVC - by Diego Cheda
 % E = EssentialMatrixFrom2DPoints(corrPts1, corrPts2, K1);
 
-% From Algorithm 25, page 252 - IREG by Klas Nordberg
-% =========> Does normalization take place in F/K? <=========
-
-F = estimate_fund 
+if nargin < 4
+    % TODO: Check if i have to save the inliers/outliers from RANSAC
+    F = estimate_fundamental_matrix(corrPts1, corrPts2);
+end
 
 E0 = K'*F*K;
 
@@ -28,18 +28,21 @@ D = [1 0 0;
  
 E = U*D*V';
 
-homoCorrPts1 = conv_to_homogenous(corrPts1);
-homoCorrPts2 = conv_to_homogenous(corrPts2);
-
-firstEpConstraint = homoCorrPts1(:,1)'*E*homoCorrPts2(:,1);
-
-sumEpConstraint = 0;
-for i = 1:length(corrPts)
-    sumEpConstraint = sumEpConstraint + homoCorrPts1(:,i)'*E*homoCorrPts2(:,i);
+if is_homogeneous(corrPts1) == false
+    corrPts1 = conv_to_homogeneous(corrPts1);
+    corrPts2 = conv_to_homogeneous(corrPts2);
 end
 
-fprintf('>>Epipolar constraint for first point<< %f', firstEpConstraint);
-fprintf('>>>>>Sum of epipolar constraints<<<<< %f', sumEpConstraint);
+firstEpConstraint = corrPts1(:,1)'*E*corrPts2(:,1);
+
+nCorrs = length(corrPts1);
+sumEpConstraint = 0;
+for i = 1:nCorrs
+    sumEpConstraint = sumEpConstraint + corrPts1(:,i)'*E*corrPts2(:,i);
+end
+
+fprintf('>>Epipolar constraint - first point for E << \n %f', firstEpConstraint);
+fprintf('>>>>>Sum of all points for E <<<<< \n %f', sumEpConstraint);
 
 
 end

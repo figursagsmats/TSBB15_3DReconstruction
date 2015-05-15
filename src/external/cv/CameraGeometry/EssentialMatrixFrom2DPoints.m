@@ -33,8 +33,8 @@ p2 = NormalizedCoordinates(p2,k);
 % Transform the image coordinates according to x^_i = Tx_i and x'^_i =
 % T'x'_i where T and T' are normalizing transformation consisting of a
 % translation and scaling.
-[p1,t1] = Normalise2DPts(p1);
-[p2,t2] = Normalise2DPts(p2);
+[p1,t1] = normalise2dpts(p1);
+[p2,t2] = normalise2dpts(p2);
 
 
 
