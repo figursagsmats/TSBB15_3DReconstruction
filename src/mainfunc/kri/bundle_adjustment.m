@@ -34,7 +34,7 @@ function [Q, P, BK] = bundle_adjustment(Q, P, BK, pointsTable)
     N_VIEWS = size(Q,3); 
     %Amount of views
     
-    N_POINTS = size(P,3); 
+    N_POINTS = size(P,2); 
     %Amount of points
     
     X = P; 
@@ -83,15 +83,12 @@ function [Q, P, BK] = bundle_adjustment(Q, P, BK, pointsTable)
     end
 
     % Extract the minimized 3D-points from output
-    count = 1;
-    for m = (1 + 12*N_VIEWS):3:length(output)
-        P_min(:,:,count) = output(m:(m+2));
-        count = count + 1;
-    end
+    P_min = reshape(output(1+(N_VIEWS*12):end),[4 N_POINTS]);
     
     % Apply the new minimized 3D-points and Rt-matrices
     P = P_min;
     Q = Rt_min;
+    BK = [];
 
 end
 

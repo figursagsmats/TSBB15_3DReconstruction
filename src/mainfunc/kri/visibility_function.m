@@ -26,5 +26,6 @@ function [W] = visibility_function(PointTable)
     % If the position is equal to [-1; -1] it means that the point is not
     % visible in this view.
     W = PointTable > 0;
+    W = double(W);
     
 end
