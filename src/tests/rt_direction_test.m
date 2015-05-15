@@ -1,15 +1,15 @@
-function [correct_case] = test_rt_direction(R, t, X, RDirection, tDirection, type)
+function [correct_case] = rt_direction_test(R, t, X, RDirection, tDirection, type)
 
 correct_case = false;
 
 X2 = R(:,:,RDirection)*X + t(:,tDirection);
-is_homogeneous
+
 % On one of the four cases, we get a point
 % infront of our cameras. Save the Rt for that case.
 fprintf(type);
-fprintf('X(3) = %f \n', X(3));
+fprintf('\n X(3) = %f \n', X(3));
 fprintf('X2(3) = %f \n', X2(3));
-fprintf('======================== \n');
+fprintf('--------------------------- \n');
 if (X(3) > 0) && (X2(3) > 0)
     correct_case = true;
 end

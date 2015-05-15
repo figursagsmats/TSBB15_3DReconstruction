@@ -15,16 +15,16 @@ K = calibrate_camera('../datasets/dino/calibration','*.ppm');
 % pts1(:,25) = [405 440];
 % pts1(:,30) = [1 576];
 % pts1(:,35) = [10 10];
-F = estimate_fundamental_matrix(corrPts1,corrPts2);
-
-E0 = K'*F*K;
-[U, ~, V] = svd(E0);
-
-D = [1 0 0;
-     0 1 0;
-     0 0 0;];
- 
-E = U*D*V';
+% F = estimate_fundamental_matrix(corrPts1,corrPts2);
+% 
+% E0 = K'*F*K;
+% [U, ~, V] = svd(E0);
+% 
+% D = [1 0 0;
+%      0 1 0;
+%      0 0 0;];
+%  
+% E = U*D*V';
 
 if is_homogeneous(corrPts1) == false
     corrPts1 = conv_to_homogeneous(corrPts1);
@@ -33,5 +33,11 @@ end
 
 E_diego = EssentialMatrixFrom2DPoints(corrPts1, corrPts2, K);
 
-% epipolar_constraint_E_test(E, corrPts1, corrPts2);
-epipolar_constraint_E_test(E_diego, corrPts1, corrPts2);
+normCorrPts1 = NormalizedCoordinates(corrPts1, K);
+normCorrPts2 = NormalizedCoordinates(corrPts2, K);
+
+normCorrPts1 = norml(normCorrPts1);
+normCorrPts2 = norml(normCorrPts2);
+
+% epipolar_constraint_E_test(E, normCorrPts1, normCorrPts2);
+epipolar_constraint_E_test(E_diego, normCorrPts1, normCorrPts2);
