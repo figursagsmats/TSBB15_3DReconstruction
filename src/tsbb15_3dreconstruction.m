@@ -47,6 +47,9 @@ for viewIndx = 3:nViews
     
     [P,Q,BK] = bundle_adjustment(P,Q,BK,pointsTable);
     BK = remove_bad_3dpts(BK);
+    % if points removed
+    %      do bundle_adjustment a second time
+    % end
     
     [x1,x2,X] = get_correspondces(1,2,pointsTable,P);
     
