@@ -29,7 +29,7 @@ console_heading('INIT');
 
 [pts1,pts2] = get_correspondces(1,2,pointsTable);
 
-E = estimate_essential_matrix(pts1,pts2,K);
+E = estimate_essential_matrix(pts1,pts2,K, F);
 
 Rt = estimate_rt(E, pts1(:,1),pts2(:,1));
 
@@ -39,12 +39,7 @@ Q = extend_q(Rt,K,Q);
 %P = triangulate_3d_pts(Q(1),Q(2),pts1,pts2);
 P = zeros(2,size(pointsTable,2));
 BK = [];
-% Initiate BK-struct, add all elements to BK
-%   BK.P  = P;
-%   BK.Q  = Q;
-%   BK.2D = [];
-
-% ITERATION PART
+%% ITERATION PART
 console_heading('ITERATION');
 for viewIndx = 3:nViews
     
