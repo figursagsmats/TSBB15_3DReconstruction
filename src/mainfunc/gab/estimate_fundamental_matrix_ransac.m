@@ -10,14 +10,14 @@ function [F] = estimate_fundamental_matrix_ransac(corrPts1, corrPts2, nIteration
 
 fprintf('---RANSAC---');
 nMaxIterations = 0;
-
+nCorrs = length(corrPts1);
 for m = 1:nIterations
     
     if(mod(m,100)==0)
         fprintf('.');
     end
     
-    N = datasample(1:nr_of_corrs,8,'Replace',false);    %choose random samples
+    N = datasample(1:nCorrs,8,'Replace',false);    %choose random samples
     F = fmatrix_stls(corrPts1(1:2,N), corrPts2(1:2,N));     %calculate F     
     
     dist = abs(fmatrix_residuals(F,corrPts1(1:2,:),corrPts2(1:2,:)));
@@ -36,7 +36,9 @@ for m = 1:nIterations
     
 end
 fprintf('DONE\n');
+fprintf('Total number of correspondences: %d \n', nCorrs);
 fprintf('RANSAC best iteration %d ...Inliers: %d \n', best_iteration, nMaxIterations);
+
 
 F = ransacBestF;
 

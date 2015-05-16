@@ -17,8 +17,11 @@ function [ K ] = calibrate_camera( dir,fileExtenstion )
 %FOR NOW: fetch from ground truth
 
 [pointsTable Ps] = load_dino_gt();
-P = cell2mat(Ps(1)); %just takes first C matrix since all have same K
-[K, r, c] = DecomposeCameraMatrix(P);
+P = cell2mat(Ps(1)); %just takes first C matrix since all have same K.
+
+% Split the projection matrix P (camera matrix C) into an internal camera
+% matrix K and a rotation matrix R. Use QR-decomposition.
+[K, R] = qr(P);
 
 end
 
