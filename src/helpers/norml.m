@@ -3,6 +3,7 @@ function [ ret ] = norml( vec )
 %   Detailed explanation goes here
 
 if(size(vec,1)==3)
+    
 ret(1,:) = vec(1,:)./vec(3,:);
 ret(2,:) = vec(2,:)./vec(3,:);
 

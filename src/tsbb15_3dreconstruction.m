@@ -27,7 +27,7 @@ K = calibrate_camera('../datasets/dino/calibration','*.ppm');
 console_heading('INIT');
 %[pointsTable, viewImageMapping, nViews] = rearrange_views(pointsTable);
 
-[pts1,pts2] = get_correspondces(1,2,pointsTable);
+[pts1,pts2] = get_correspondces(1,5,pointsTable);
 
 
 E = estimate_essential_matrix(pts1,pts2,K);
