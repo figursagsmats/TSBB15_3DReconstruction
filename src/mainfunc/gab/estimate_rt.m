@@ -1,4 +1,4 @@
-function [ Rt ] = estimate_rt(E, corrPts1, corrPts2)
+function [ Rt ] = estimate_rt(E, corrPoint1, corrPoint2, K)
 % CALCULATE_Rt - A camera pose Rt consistent with E
 % 
 % Calculate a relative camera pose Rt that is consistent
@@ -8,10 +8,16 @@ function [ Rt ] = estimate_rt(E, corrPts1, corrPts2)
 % --------------------------------------------
 % Input: An essential matrix E.
 %        A pair of correspondence points corrPoint1 and corrPoint2.
-%        with dimension: 2x1
-% Output: Rotation and translation matrix Rt.
+%        Intrinsic camera matrix K.
 % 
+% Output: Rotation and translation matrix Rt.
 
+if is_homogeneous(corrPoint1) == false
+    corrPointHomo1 = conv_to_homogeneous(corrPoint1);
+    corrPointHomo2 = conv_to_homogeneous(corrPoint2);
+end
+
+% Algorithm 5 - IREG page 141, by Klas Nordberg.
 W = [0 1 0;
     -1 0 0;
      0 0 1];
@@ -20,35 +26,45 @@ W = [0 1 0;
 t(:,1) = V(:,3);
 t(:,2) = -V(:,3);
 
-
 R(:,:,1) = V*W*U';
 R(:,:,2) = V*W'*U';
 
+% Set first camera as origin.
 Rt1 = [1 0 0 0;
        0 1 0 0;
        0 0 1 0];
 
-  
+% Transform into C-normalized coordinates.
+normCorrPoint1 = K\corrPointHomo1;
+normCorrPoint2 = K\corrPointHomo2;
+
+% Normalize to 2D-points
+normCorrPoint1 = norml(normCorrPoint1, true);
+normCorrPoint2 = norml(normCorrPoint2, true);
+
 for tDirection = 1:2
     for RDirection = 1:2
         
-        % Pick an Rt.
+        % Pick one of the four Rt:s.
         Rt2 = [R(:,:,RDirection) t(:,tDirection)];
-        % Get 3D-point for Rt1 and Rt2, where Rt1 is unit
-        X_homogenous = triangulate_optimal(Rt1, Rt2, corrPts1, corrPts2);
-        X = norml(X_homogenous);
         
+        % Get 3D-point from Rt1 and Rt2.
+        X_homogeneous = triangulate_linear(Rt1, Rt2, normCorrPoint1, normCorrPoint2);
+        X = norml(X_homogeneous);
+
         X2 = R(:,:,RDirection)*X + t(:,tDirection);
-        
+
         z1 = X(3);
         z2 = X2(3);
-        % On one of the four cases, we get a point
-        % infront of our cameras. Save the Rt for that case.
+
+        % On one of the four cases, we get a point infront of our camera. 
         if (z1 > 0) && (z2 > 0)
             Rt = Rt2;
+            break;
         end
-    end
-end
+
+    end % End of: for-loop RDirection
+end % End of: for-loop tDirection
 
 end
 

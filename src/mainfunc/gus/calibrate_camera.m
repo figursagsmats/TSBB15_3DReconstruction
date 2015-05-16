@@ -21,7 +21,7 @@ P = cell2mat(Ps(1)); %just takes first C matrix since all have same K.
 
 % Split the projection matrix P (camera matrix C) into an internal camera
 % matrix K and a rotation matrix R. Use QR-decomposition.
-[K, R] = qr(P);
+[K, R] = DecomposeCameraMatrix(P);
 
 end
 
