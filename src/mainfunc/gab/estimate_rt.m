@@ -1,15 +1,18 @@
-function [ Rt ] = estimate_rt(E, corrPoint1, corrPoint2, K)
-% CALCULATE_Rt - A camera pose Rt consistent with E
+function [Rt] = estimate_rt(E, corrPoint1, corrPoint2, K)
+% ESTIMATE_RT - A camera pose Rt consistent with E
 % 
-% Calculate a relative camera pose Rt that is consistent
+% Estimate a relative camera pose Rt that is consistent
 % with the essential matrix E and for which the 3D-point 
 % that corresponds to corrPoint1 and corrPoint2 lies in front
 % of both cameras.
+% 
+% [Rt] = ESTIMATE_RT(E, corrPoint1, corrPoint2, K)
+% 
+% From Algorithm 5 page 138 IREG by Klas Nordberg
 % --------------------------------------------
 % Input: An essential matrix E.
 %        A pair of correspondence points corrPoint1 and corrPoint2.
 %        Intrinsic camera matrix K.
-% 
 % Output: Rotation and translation matrix Rt.
 
 if is_homogeneous(corrPoint1) == false

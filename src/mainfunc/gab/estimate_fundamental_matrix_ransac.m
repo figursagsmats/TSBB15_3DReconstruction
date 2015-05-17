@@ -1,12 +1,15 @@
 function [F] = estimate_fundamental_matrix_ransac(corrPts1, corrPts2, nIterations, distThresh)
-% ESTIMATE_FUNDAMENTAL_MATRIX_RANSAC - Fundamental matrix F by using RANSAC
+% ESTIMATE_FUNDAMENTAL_MATRIX_RANSAC - Fundamental matrix F by RANSAC.
 % 
-% Returns fundamental matrix F, estimated with RANSAC.
+% [F] = ESTIMATE_FUNDAMENTAL_MATRIX_RANSAC(corrPts1, corrPts2, nIterations,
+% distThresh)
+% 
+% From Algorithm 26 page 262 IREG by Klas Nordberg
+% --------------------------------------------
 % Input: corrPts1 2xN - Correspondence points in view 1
 %        corrPts2 2xN - Correspondence points in view 2
 %        nIterations - Number of iterations 
 %        distThresh - A pixel distance threshold
-%        
 
 fprintf('---RANSAC---');
 nMaxIterations = 0;

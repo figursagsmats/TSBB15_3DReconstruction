@@ -1,14 +1,14 @@
 function [E] = estimate_essential_matrix(F, K)
-% CALCULATE_ESSENTIAL_MATRIX - Essential matrix E
+% ESTIMATE_ESSENTIAL_MATRIX - Essential matrix E
 % 
-% calculate_essential_matrix(F, K)
+% [E] = ESTIMATE_ESSENTIAL_MATRIX(F, K)
+% 
+% From Equation (8.62) page 138 IREG by Klas Nordberg 
+% --------------------------------------------
 % Input: Fundamental matrix F.
 %        Intrinsic camera matrix K.
+% Output: Essential matrix E.
 
-
-% Equation (8.62) from IREG 
-% (Introduction to Representations and Estimation 
-% in Geometry) by Klas Nordberg 
 E0 = K'*F*K;
 
 [U, ~, V] = svd(E0);
