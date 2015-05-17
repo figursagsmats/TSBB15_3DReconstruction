@@ -42,7 +42,8 @@ function [Q, P, BK] = bundle_adjustment(Q, P, BK, pointsTable)
     %Saving the 3D-points to variable X (4xN)
     
     % Change the pointsTable to correct structure [N 2P]
-    % TODO: Change the pointsTable->BK depending on the data-structure
+    % TODO: Change the pointsTable->BK depending on the data-structure of
+    % earlier functions
     correspondence_points_2D = zeros(N_VIEWS, N_POINTS*2);
     correspondence_points_2D(:, 1:2:end) = pointsTable(1:N_VIEWS,:,1);
     correspondence_points_2D(:, 2:2:end) = pointsTable(1:N_VIEWS,:,2);
@@ -80,6 +81,7 @@ function [Q, P, BK] = bundle_adjustment(Q, P, BK, pointsTable)
     P_min = reshape(output(1+(N_VIEWS*12):end),[3 N_POINTS]);
     
     % Apply the new minimized 3D-points and Rt-matrices
+    % TODO: What is BK?
     P = P_min;
     Q = Rt_min;
     BK = [];
