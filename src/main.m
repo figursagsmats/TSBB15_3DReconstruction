@@ -1,5 +1,12 @@
 loadSubfolders();
-clearAllDeluxeEdition();
+% clearAllDeluxeEdition();
+close all;
+clc
+s=dbstatus;
+save('myBreakpoints.mat', 's');
+clear all
+load('myBreakpoints.mat');
+dbstop(s);
 
 % images is global for now to reduce loading times because
 % findFeaturePoints is temporarily loading all images.
@@ -17,12 +24,14 @@ ftPtsIdxMap = findCorrespondences(ftPts1,ftPts2,images(1).img,images(2).img);
 [corrPts1,corrPts2,rest1,rest2] = spliceConcensus(ftPts1,ftPts2,ftPtsIdxMap);
 recentUnmatchedPts = rest2;
 
-showCorrespondeces(images(1).img,images(2).img,corrPts1,corrPts2);
+
 
 %Estimate E
 [F,inlinersIdxMap] = fundamentalMatrixRansac(corrPts1,corrPts2);
 F = fundamentalMatrixGold(F,corrPts1,corrPts2);
 E = essentialMatrix(F,K);
+
+% showCorrespondeces(images(1).img,images(2).img,corrPts1,corrPts2, inlinersIdxMap);
 
 %Estimate Rt
 Rt1 = eye(3,4);
@@ -85,7 +94,7 @@ for k = 3:nViews;
     
     % Add new 3D-points
     if(~isempty(remainingCorrs1))
-        [remainingCorrs1,remainingCorrs2] = checkEpipolarConstraint(remainingCorrs1,remainingCorrs2, E);
+        [remainingCorrs1,remainingCorrs2] = checkEpipolarConstraint(remainingCorrs1,remainingCorrs2, E, K);
         if(~isempty(remainingCorrs1))
             new3DPoints = triangulateShit(Q(k-1).P,Q(k).P,remainingCorrs1,remainingCorrs2);
             newBKCols = makeBKCols(BK,remainingCorrs1,remainingCorrs2,k-1,k);

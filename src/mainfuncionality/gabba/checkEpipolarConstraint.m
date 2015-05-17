@@ -1,4 +1,4 @@
-function [pts1,pts2] = checkEpipolarConstraint(pts1,pts2, E)
+function [x1,x2] = checkEpipolarConstraint(pts1,pts2, E, K)
 % CHECKEPIPOLARCONSTRAINT Check if the epipolar constraint is satisfied.
 % 
 % Check the constraint y1'*E*y2 = 0. Where y1 and y2 are corresponding
@@ -12,34 +12,45 @@ function [pts1,pts2] = checkEpipolarConstraint(pts1,pts2, E)
 %        y1 & y2 - Corresponding points
 % Output: isSatisfied - true/false or 1/0
 
-
+nPoints = size(pts1,2);
 
 
 
 % ==========FILL WITH -1????===============
 % if nPoints == 0 return error not a single point satisfied
 
-const THRESHHOLD = 0.2;
+THRESHHOLD = 0.2;
 
-if is_homogeneous(y1) == false
-    y1 = conv_to_homogeneous(y1);
-    y2 = conv_to_homogeneous(y2);
+if is_homogeneous(pts1) == false
+    pts1 = conv_to_homogeneous(pts1);
+    pts2 = conv_to_homogeneous(pts2);
 end
 
-% Convert to C-normalized coordinates.
-y1 = K\y1;
-y2 = K\y2;
 
-% Normalize to homogeneous coordinates.
-y1 = norml(y1, true);
-y2 = norml(y2, true);
+count = 1;
+for n = 1:nPoints
+    y1 = pts1(:,n);
+    y2 = pts2(:,n);
     
-epipolarConstraint = y1'*E*y2;
+    % Convert to C-normalized coordinates.
+    y1 = K\y1;
+    y2 = K\y2;
+    
+    % Normalize to homogeneous coordinates.
+    y1 = norml(y1, true);
+    y2 = norml(y2, true);
 
-if epipolarConstraint < THRESHHOLD
-    isSatisfied = true;
-else
-    isSatisfied = false;
+    epipolarConstraint = y1'*E*y2;
+
+    if epipolarConstraint < THRESHHOLD
+        x1(:,count) = y1;
+        x2(:,count) = y2;
+        count = count + 1;
+    end
+    
 end
+
+x1 = norml(x1, false);
+x2 = norml(x2, false);
 
 end
