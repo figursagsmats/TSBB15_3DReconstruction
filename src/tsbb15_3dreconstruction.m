@@ -29,11 +29,11 @@ console_heading('INIT');
 [pts1,pts2] = get_correspondces(1,5,pointsTable);
 
 % TODO: Check if i have to save the inliers/outliers from RANSAC
-F = estimate_fundamental_matrix(pts1, pts2);
+[F, inlierIndexes] = estimate_fundamental_matrix(pts1, pts2);
 
-E = estimate_essential_matrix(pts1,pts2,K, F);
+E = estimate_essential_matrix(F,K);
 
-Rt = estimate_rt(E, pts1(:,1),pts2(:,1));
+Rt = estimate_rt(E, pts1(:,1),pts2(:,1), K);
 
 Q = extend_q(eye(4),K);
 Q = extend_q(Rt,K,Q);

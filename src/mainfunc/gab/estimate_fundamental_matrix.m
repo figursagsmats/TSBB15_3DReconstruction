@@ -1,4 +1,4 @@
-function [F] = estimate_fundamental_matrix(corrPts1, corrPts2)
+function [F, inlierIndexes] = estimate_fundamental_matrix(corrPts1, corrPts2)
 % ESTIMATE_FUNDAMENTAL_MATRIX Fundamental matrix F
 % 
 % Use RANSAC and Gold Standard algorithm to estimate the fundamental matrix F.
@@ -11,12 +11,15 @@ function [F] = estimate_fundamental_matrix(corrPts1, corrPts2)
 % Output: Fundamental matrix F
 
 %% === RANSAC robust estimation ====
-nIterations = 5000;
-distThresh = 3;
-F_ransac = estimate_fundamental_matrix_ransac(corrPts1, corrPts2, nIterations, distThresh);
 
+p = 0.99;
+w = 0.5;
+s = 8; % 8-points algorithm
+nIterations = ransac_number_of_trials(p, w, s);
+distThresh = 2;
 
+[F_ransac, inlierIndexes] = estimate_fundamental_matrix_ransac(corrPts1, corrPts2, nIterations, distThresh);
 %% === Gold standard algorithm ====
 
-F = estimate_fundamental_matrix_gs(corrPts1, corrPts2, F_ransac);
+F = estimate_fundamental_matrix_gs(corrPts1(:,inlierIndexes), corrPts2(:,inlierIndexes), F_ransac);
 end
