@@ -33,18 +33,17 @@ Rt2 = estimateRt(E,K,corrPts1(:,1),corrPts2(:,1));
 recentUnmatchedPts = [recentUnmatchedPts rest2]; %appending list of unmatched points
 
 %Initiate alla data structured neede for iteration
-Q(1).Rt = Rt1;
-Q(2).Rt = Rt2;
-Q(1).K = K;
-Q(2).K = K;
+Q(1).P = K*Rt1;
+Q(2).P = K*Rt2;
+prevRt = Rt2;
 
-P = triangulate(Q(1),Q(2),corrPts1,corrPts2);
+P = triangulateShit(Q(1).P,Q(2).P,corrPts1,corrPts2);
 BK = [];
 BK = insertRow(BK,corrPts1);
 BK = insertRow(BK,corrPts2);
 
 oldP = P;
-[newP,Q,BK] = bundleAdjustment(oldP,Q,BK);
+[newP,Q] = bundleAdjustment(oldP,Q,BK);
 [P,BK] = removeBad3DPoints(BK,Q,oldP,newP); 
 
 %Iteration
@@ -74,8 +73,7 @@ for k = 3:nViews;
     [S,remainingCorrs1,remainingCorrs2] = createS(corrPts1,corrPts2,tableIndexes,P,BK);
     
     [Rt,inlierIndexes] = pnp(S,k);
-    Q(k).Rt = Rt;
-    Q(k).K = K;
+    Q(k).P = K*Rt;
     
     [C,U] = splitS(inlierIndexes,S);
     
@@ -83,13 +81,13 @@ for k = 3:nViews;
     
     BK = insertRow(BK,C.pts2,C.bkIndexes);
     
-    E = estimateEFromViews(Q(k-1).Rt, Q(k).Rt);
+    E = estimateEFromViews(prevRt, Rt);
     
     % Add new 3D-points
     if(~isempty(remainingCorrs1))
         [remainingCorrs1,remainingCorrs2] = checkEpipolarConstraint(remainingCorrs1,remainingCorrs2, E);
         if(~isempty(remainingCorrs1))
-            new3DPoints = triangulate(Q(k-1),Q(k),remainingCorrs1,remainingCorrs2);
+            new3DPoints = triangulateShit(Q(k-1).P,Q(k).P,remainingCorrs1,remainingCorrs2);
             newBKCols = makeBKCols(BK,remainingCorrs1,remainingCorrs2,k-1,k);
             P = [P new3DPoints];
             BK = [BK newBKCols];            
@@ -97,17 +95,20 @@ for k = 3:nViews;
     end
         
     %WASH
-    for i = 1:length(U.bkIndexes)
-        pointIndex = U.ind(i);
-        nAppearences = getVisibility(pointIndex,BK);
-        if(nAppearences < VISIBILITY_THRESH)
-            [BK,P] = removePoint(pointIndex,BK,P);
+    if(K > 10)
+        for i = 1:length(U.bkIndexes)
+            pointIndex = U.ind(i);
+            nAppearences = getVisibility(pointIndex,BK);
+            if(nAppearences < VISIBILITY_THRESH)
+                [BK,P] = removePoint(pointIndex,BK,P);
+            end
         end
     end
     
     oldP = P;
-    [newP,Q,BK] = bundleAdjustment(oldP,Q,BK);
+    [newP,Q] = bundleAdjustment(oldP,Q,BK);
     [P,BK] = removeBad3DPoints(BK,Q,oldP,newP); 
+    prevRt = Rt;
     
 end
 
