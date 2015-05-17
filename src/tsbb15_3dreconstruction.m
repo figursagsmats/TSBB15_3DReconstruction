@@ -26,7 +26,7 @@ K = calibrate_camera('../datasets/dino/calibration','*.ppm');
 console_heading('INIT');
 %[pointsTable, viewImageMapping, nViews] = rearrange_views(pointsTable);
 
-[pts1,pts2] = get_correspondces(1,2,pointsTable);
+[pts1,pts2] = get_correspondces(1,5,pointsTable);
 
 % TODO: Check if i have to save the inliers/outliers from RANSAC
 [F, inlierIndexes] = estimate_fundamental_matrix(pts1, pts2);
