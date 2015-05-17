@@ -8,8 +8,9 @@ K = intrinsics(35,79)
 %cameraParams = cameraParameters('IntrinsicMatrix',K);
 cameraParams = cameraParameters();
 R = rotmatx(90)*rotmaty(180);
-t = [10 -2000 10]
-P = [cameraMatrix(cameraParams,R,t) [0 0 0 1]']
+t = [10 10 10]
+%P = [cameraMatrix(cameraParams,R,t) [0 0 0 1]']
+P = cameraMatrix(cameraParams,R,t);
 
 S = eye(3)*50;
 f.verticies = S*f.verticies
@@ -28,17 +29,15 @@ zlabel('Z(mm)') % y-axis label
 x = [0  1  1  0  0  0  1  1  0  0  1  1  1  1  0  0];
 y = [0  0  1  1  0  0  0  1  1  0  0  0  1  1  1  1];
 z = [0  0  0  0  0  1  1  1  1  1  1  0  0  1  1  0];
-
-A = viewmtx(-37.5,30);
-m = 1;
-n = size(x3,2);   
+ 
 %x4d = [x(:),y(:),z(:),ones(m*n,1)]';
-x2d = P*x3;
-%x2d = norml(x2d);
-x2 = zeros(m,n); y2 = zeros(m,n);
+x2d = norml(P*x3');
+nPoints = size(x3,2);
+x2 = zeros(1,nPoints); y2 = zeros(1,nPoints);
 x2(:) = x2d(1,:);
 y2(:) = x2d(2,:);
+
 figure
 plot(x2,y2)
 axis equal
-xlim([-])
+
