@@ -1,8 +1,20 @@
 function [goldStandardF] = estimate_fundamental_matrix_gs(corrPts1, corrPts2, bestF)
-
+% ESTIMATE_FUNDAMENTAL_MATRIX_GS Fundamental matrix F
+% 
+% Use Gold Standard algorithm to estimate the fundamental matrix F.
+% 
+% [F] = ESTIMATE_FUNDAMENTAL_MATRIX_GS(corrPts1, corrPts2, F)
+% 
+% From Algorithm 24 page 251 IREG by Klas Nordberg
+% --------------------------------------------
+% Input: Correspondence points - 2xN
+%        Fundamental matrix F = 3x3
+%        corrPts1 = 2xN
+%        corrPts2 = 2xN
+% Output: Fundamental matrix F.
 
 nCorrs = length(corrPts1);
-% Get camaera matricies - C2 = [I | O](?)
+% Get camera matricies - C2 = [I | O](?)
 [C1,C2] = fmatrix_cameras(bestF);
 
 %  Triangulate all points

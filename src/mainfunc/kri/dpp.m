@@ -3,7 +3,8 @@
 function r = dpp(vars, N_VIEWS, N_POINTS, W, Xt)
 
     % 3D positions
-    X = reshape(vars(1+(N_VIEWS*12):end),[4 N_POINTS]);
+    X = reshape(vars(1+(N_VIEWS*12):end),[3 N_POINTS]);
+    X = conv_to_homogeneous(X);
     
     % r is a single vector of all the reprojection errors
     r = zeros(N_VIEWS*(N_POINTS*2), 1);

@@ -5,6 +5,8 @@ function [pHomogeneous] = conv_to_homogeneous(p)
 
 if is_homogeneous(p) == false
     pHomogeneous = [p; ones(size(p,2), 1)'];
+else
+    disp('The points are already in homogeneous coordinates');
 end
 
 end

@@ -1,12 +1,14 @@
 function [F] = estimate_fundamental_matrix(corrPts1, corrPts2)
-%% 	ESTIMATE_FUNDAMENTAL_MATRIX Fundamental matrix F
+% ESTIMATE_FUNDAMENTAL_MATRIX Fundamental matrix F
 % 
-% Use RANSAC and then Gold Standard algorithm to calculate fundamental matrix F.
+% Use RANSAC and Gold Standard algorithm to estimate the fundamental matrix F.
 % 
-% calculate_fundamental_matrix(corrPts1, corrPts2)
-% Input: Correspondence points 2xN
+% [F] = ESTIMATE_FUNDAMENTAL_MATRIX(corrPts1, corrPts2)
+% --------------------------------------------
+% Input: Correspondence points - 2xN
 % corrPts1 = 2xN
 % corrPts2 = 2xN
+% Output: Fundamental matrix F
 
 %% === RANSAC robust estimation ====
 nIterations = 5000;
