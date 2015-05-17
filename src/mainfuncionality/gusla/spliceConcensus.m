@@ -5,8 +5,14 @@ function [ corrPts1,corrPts2,rest1,rest2 ] = spliceConcensus( pts1,pts2,correspo
 %
 % Author: Gustav Lagnström
 
-idx1 = correspondingIndexes(1,:);
-idx2 = correspondingIndexes(2,:);
+if size(correspondingIndexes, 1) < 2
+    idx1 = correspondingIndexes(1,:);
+    idx2 = correspondingIndexes(1,:);
+else
+    idx1 = correspondingIndexes(1,:);
+    idx2 = correspondingIndexes(2,:);    
+end
+
 corrPts1 = pts1(:,idx1);
 corrPts2 = pts2(:,idx2);
 
