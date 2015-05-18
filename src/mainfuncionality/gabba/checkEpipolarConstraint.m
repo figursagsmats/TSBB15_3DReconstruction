@@ -26,7 +26,8 @@ if is_homogeneous(pts1) == false
     pts2 = conv_to_homogeneous(pts2);
 end
 
-
+x1 = [];
+x2 = [];
 count = 1;
 for n = 1:nPoints
     y1 = pts1(:,n);
@@ -43,14 +44,16 @@ for n = 1:nPoints
     epipolarConstraint = y1'*E*y2;
 
     if epipolarConstraint < THRESHHOLD
-        x1(:,count) = y1;
-        x2(:,count) = y2;
+        x1(:,count) = pts1(:,n);
+        x2(:,count) = pts2(:,n);
         count = count + 1;
     end
     
 end
+if(~isempty(x1))
+    x1 = norml(x1, false);
+    x2 = norml(x2, false);
+end
 
-x1 = norml(x1, false);
-x2 = norml(x2, false);
 
 end

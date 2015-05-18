@@ -1,15 +1,29 @@
-function [ Rt, inlierIndexes] = pnp( S,k)
+function [ Rt, inlierIndexes] = pnp(S ,K)
 
-%FORNOW
-[BK,Ps] = loadDinoGt();
 
-P = cell2mat(Ps(k));
+corrPts1=S.pts1;
+corrPts2=S.pts2;
+pts3d = S.pts3d;
 
-[K,R,C] = DecomposeCameraMatrix(P);
+nPoints= size(corrPts1,2);
+if(nPoints > 9)
+    [F,inlinersIdxMap] = fundamentalMatrixRansac(corrPts1,corrPts2);
+    [inlierPts3d,inlierPts2d] = spliceConcensus(pts3d,corrPts2,inlinersIdxMap);
+    inlierIndexes = inlinersIdxMap;
 
-Rt = R*C;
-Rt = eye(3,4);
+else
+    fprintf('WARNING: not enough points in S to perform RANSAC\n');
+    inlierPts3d = pts3d;
+    inlierPts2d = corrPts2;
+    inlierIndexes = 1:nPoints;
+end
 
-inlierIndexes = 1:length(S.bkIndexes);
+x3d_h = [inlierPts3d' ones(size(inlierPts3d,2),1)];
+x2d_h = [inlierPts2d' ones(size(inlierPts2d,2),1)];
+A = K;
+
+[Rp,Tp,Xc,sol]=efficient_pnp_gauss(x3d_h,x2d_h,A);
+
+Rt = [Rp Tp];
 end
 

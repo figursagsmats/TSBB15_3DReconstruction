@@ -24,8 +24,6 @@ ftPtsIdxMap = findCorrespondences(ftPts1,ftPts2,images(1).img,images(2).img);
 [corrPts1,corrPts2,rest1,rest2] = spliceConcensus(ftPts1,ftPts2,ftPtsIdxMap);
 recentUnmatchedPts = rest2;
 
-
-
 %Estimate E
 [F,inlinersIdxMap] = fundamentalMatrixRansac(corrPts1,corrPts2);
 F = fundamentalMatrixGold(F,corrPts1,corrPts2);
@@ -57,6 +55,7 @@ oldP = P;
 
 %Iteration
 for k = 3:nViews;
+    console_heading(strcat('Iteration ', int2str(k)));
     %Get feature points in last view from BK and their indexes.
     [prevFtPts, tableIndexes] = getFeaturePts(k-1,BK);
     
@@ -68,9 +67,7 @@ for k = 3:nViews;
     
     %Find features in new view and correspondeces
     newFtPts = findFeaturePoints(images(k).img);
-    if(k==20)
-        aj =1;
-    end
+
     ftPtsIdxMap = findCorrespondences(prevFtPts,newFtPts,images(k-1).img,images(k).img);
     
     %Now we need to slice consencus from both orgIndexes and feature points
@@ -81,7 +78,7 @@ for k = 3:nViews;
     
     [S,remainingCorrs1,remainingCorrs2] = createS(corrPts1,corrPts2,tableIndexes,P,BK);
     
-    [Rt,inlierIndexes] = pnp(S,k);
+    [Rt,inlierIndexes] = pnp(S,K);
     Q(k).P = K*Rt;
     
     [C,U] = splitS(inlierIndexes,S);
@@ -91,11 +88,14 @@ for k = 3:nViews;
     BK = insertRow(BK,C.pts2,C.bkIndexes);
     
     E = estimateEFromViews(prevRt, Rt);
-    
+
     % Add new 3D-points
     if(~isempty(remainingCorrs1))
         [remainingCorrs1,remainingCorrs2] = checkEpipolarConstraint(remainingCorrs1,remainingCorrs2, E, K);
         if(~isempty(remainingCorrs1))
+            if(k==4)
+                aj =1;
+            end
             new3DPoints = triangulateShit(Q(k-1).P,Q(k).P,remainingCorrs1,remainingCorrs2);
             newBKCols = makeBKCols(BK,remainingCorrs1,remainingCorrs2,k-1,k);
             P = [P new3DPoints];
@@ -104,9 +104,9 @@ for k = 3:nViews;
     end
         
     %WASH
-    if(K > 10)
+    if(k > 10)
         for i = 1:length(U.bkIndexes)
-            pointIndex = U.ind(i);
+            pointIndex = U.bkIndexes(i);
             nAppearences = getVisibility(pointIndex,BK);
             if(nAppearences < VISIBILITY_THRESH)
                 [BK,P] = removePoint(pointIndex,BK,P);
@@ -115,6 +115,7 @@ for k = 3:nViews;
     end
     
     oldP = P;
+    pts = get_view_pts(BK,k);
     [newP,Q] = bundleAdjustment(oldP,Q,BK);
     [P,BK] = removeBad3DPoints(BK,Q,oldP,newP); 
     prevRt = Rt;
