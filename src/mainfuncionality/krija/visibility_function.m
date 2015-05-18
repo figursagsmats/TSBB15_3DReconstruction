@@ -37,7 +37,7 @@ function [W, J] = visibility_function(correspondence_points_2D, vars, N_VIEWS, N
     J = J.*W;
     J(J == 0) = [];
     J = zeros(size(J,1), size(vars,1));
-    J_temp = double(zeros(size(J,1)/2, size(vars,1)));
+    J_temp = J;
     
     % Extract 3D-points
     X = reshape(vars(1+(N_VIEWS*12):end),[3 N_POINTS]);
@@ -60,18 +60,20 @@ function [W, J] = visibility_function(correspondence_points_2D, vars, N_VIEWS, N
             C_start = 12*(visible_views(n)-1)+1;
             C_end = 12*(visible_views(n)-1)+12;  
             J_temp(row_counter, C_start:C_end) = cam_fill;
+            J_temp(row_counter+1, C_start:C_end) = cam_fill;
             
             P_step = N_VIEWS*12 + 1;
             P_start = P_step + (m-1)*3;
             P_end = P_step + (m-1)*3 + 2;
-            J_temp(row_counter, P_start:P_end) = point_fill;
             
-            row_counter = row_counter + 1;
+            J_temp(row_counter, P_start:P_end) = point_fill;
+            J_temp(row_counter + 1, P_start:P_end) = point_fill;
+            
+            row_counter = row_counter + 2;
         end
     end
     
-    J(1:2:end,:) = J_temp;
-    J(2:2:end,:) = J_temp;
+    J = J_temp;
     
     J = sparse(J);
     
