@@ -26,7 +26,8 @@ if is_homogeneous(pts1) == false
     pts2 = conv_to_homogeneous(pts2);
 end
 
-
+x1 = [];
+x2 = [];
 count = 1;
 for n = 1:nPoints
     y1 = pts1(:,n);
@@ -49,8 +50,10 @@ for n = 1:nPoints
     end
     
 end
+if(~isempty(x1))
+    x1 = norml(x1, false);
+    x2 = norml(x2, false);
+end
 
-x1 = norml(x1, false);
-x2 = norml(x2, false);
 
 end

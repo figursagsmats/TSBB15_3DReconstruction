@@ -55,7 +55,7 @@ oldP = P;
 
 %Iteration
 for k = 3:nViews;
-    console_heading(strcat('Iteration ', k));
+    console_heading(strcat('Iteration ', int2str(k)));
     %Get feature points in last view from BK and their indexes.
     [prevFtPts, tableIndexes] = getFeaturePts(k-1,BK);
     
@@ -78,7 +78,7 @@ for k = 3:nViews;
     
     [S,remainingCorrs1,remainingCorrs2] = createS(corrPts1,corrPts2,tableIndexes,P,BK);
     
-    [Rt,inlierIndexes] = pnp(S);
+    [Rt,inlierIndexes] = pnp(S,K);
     Q(k).P = K*Rt;
     
     [C,U] = splitS(inlierIndexes,S);
@@ -106,7 +106,7 @@ for k = 3:nViews;
     %WASH
     if(k > 10)
         for i = 1:length(U.bkIndexes)
-            pointIndex = U.ind(i);
+            pointIndex = U.bkIndexes(i);
             nAppearences = getVisibility(pointIndex,BK);
             if(nAppearences < VISIBILITY_THRESH)
                 [BK,P] = removePoint(pointIndex,BK,P);
