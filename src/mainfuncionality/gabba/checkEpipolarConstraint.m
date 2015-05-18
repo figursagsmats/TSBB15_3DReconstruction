@@ -43,8 +43,8 @@ for n = 1:nPoints
     epipolarConstraint = y1'*E*y2;
 
     if epipolarConstraint < THRESHHOLD
-        x1(:,count) = y1;
-        x2(:,count) = y2;
+        x1(:,count) = pts1(:,n);
+        x2(:,count) = pts2(:,n);
         count = count + 1;
     end
     
